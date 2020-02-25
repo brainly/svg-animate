@@ -1,0 +1,9 @@
+node_modules
+coverage
+yarn-error.log
+/.vscode/settings.json
+*.DS_Store
+
+frames/*.svg
+frames/*.json
+output
