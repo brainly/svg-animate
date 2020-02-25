@@ -23,3 +23,13 @@ yarn start
 ```
 
 The watcher will open a browser with the animation preview. You can freely add/remove SVG frames or change graphics inside. After you finish, right-click on the image in the animation preview and choose `Save Image As...`.
+
+## How to export SVG frames
+
+The **name** of shape that you want to animate should:
+- contain `animate` keyword
+- be unique and the same for all frames
+
+### Supported graphics elements
+- path
+- polygon
