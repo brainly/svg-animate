@@ -1,0 +1,9 @@
+default:
+  duration: '1s'
+  delay: '0s'
+
+# parameters with an element name
+# override the default ones
+
+element-name:
+  duration: '2s'
