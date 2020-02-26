@@ -79,7 +79,7 @@ function alternateFrameElements(mergedElements) {
   return mergedElements;
 }
 
-function animateFrameElements(html, mergedElements) {
+function animateFrameElements(html, mergedElements, config = {}) {
   const $ = cheerio.load(html, options);
 
   mergedElements.forEach(elem => {
@@ -91,12 +91,17 @@ function animateFrameElements(html, mergedElements) {
     }
     const children = Object.keys(attrs).reduce((string, attr) => {
       if (attrs[attr].length > 1) {
+        const {
+          duration = '1s',
+          delay = '0s'
+        } = config[id] || config['default'] || {};
+
         string += createAnimateElement({
           attributeName: attr,
           values: attrs[attr].join(';'),
           repeatCount: 'indefinite',
-          dur: '2s', // todo: duration
-          begin: '0s' // todo: delay
+          dur: duration,
+          begin: delay
         });
       }
       return string;

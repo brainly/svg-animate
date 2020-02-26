@@ -2,6 +2,7 @@ const fs = require('fs');
 const {promisify} = require('util');
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
+const yaml = require('js-yaml');
 
 const {
   getAnimatedElements,
@@ -26,12 +27,17 @@ class SVGAnimate {
     this.outputPath = outputPath;
     this.outputFile = outputFile;
     this.options = options;
+    this.config = {};
   }
 
   apply(compiler) {
     compiler.hooks.afterEmit.tap('SVGAnimate', compilation => {
       const deps = Array.from(compilation.fileDependencies);
       const files = deps.filter(file => file.endsWith('.svg'));
+      const configPath = deps.find(file => file.endsWith('config.yml'));
+
+      // should watch config file
+      this.loadConfig(configPath);
 
       Promise.all(files.map(readFileUtf8))
         .then(data => this.mergeFrames(data))
@@ -50,7 +56,7 @@ class SVGAnimate {
     if (this.options.alternateDirection) {
       alternateFrameElements(mergedFrame);
     }
-    const svg = animateFrameElements(frames[0], mergedFrame);
+    const svg = animateFrameElements(frames[0], mergedFrame, this.config);
     this.writeAnimationFile(svg);
   }
 
@@ -61,6 +67,14 @@ class SVGAnimate {
     fs.writeFile(`${this.outputPath}/${this.outputFile}`, data, () => {
       console.log('🎬 The SVG animation has been created.');
     });
+  }
+
+  loadConfig(configPath) {
+    if (configPath) {
+      this.config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+    } else {
+      this.config = {};
+    }
   }
 }
 

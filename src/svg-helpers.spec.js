@@ -221,7 +221,7 @@ describe('animateFrameElements()', () => {
 
     expect(animateFrameElements(html, mergedElements)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s"/></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="1s" begin="0s"/></path>
       </svg>`
     );
   });
@@ -245,6 +245,96 @@ describe('animateFrameElements()', () => {
     expect(animateFrameElements(html, mergedElements)).toBe(`
       <svg>
         <polygon id="polygon-animate" points="M0 0 L10 10z"/>
+      </svg>`
+    );
+  });
+
+  it('should set attributes based on config', () => {
+    const config = {
+      'path-animate': {
+        duration: '2s',
+        delay: '3s'
+      }
+    };
+
+    const mergedElements = [
+      {
+        id: 'path-animate',
+        element: 'path',
+        attrs: {
+          d: ['M0 0 L10 10z', 'M10 10 L20 20z']
+        }
+      }
+    ];
+
+    const html = `
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"/>
+      </svg>`;
+
+    expect(animateFrameElements(html, mergedElements, config)).toBe(`
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s"/></path>
+      </svg>`
+    );
+  });
+
+  it('should set attributes based on config', () => {
+    const config = {
+      'path-animate': {
+        duration: '2s',
+        delay: '3s'
+      }
+    };
+
+    const mergedElements = [
+      {
+        id: 'path-animate',
+        element: 'path',
+        attrs: {
+          d: ['M0 0 L10 10z', 'M10 10 L20 20z']
+        }
+      }
+    ];
+
+    const html = `
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"/>
+      </svg>`;
+
+    expect(animateFrameElements(html, mergedElements, config)).toBe(`
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s"/></path>
+      </svg>`
+    );
+  });
+
+  it('should fallback attributes to default config', () => {
+    const config = {
+      'default': {
+        duration: '4s',
+        delay: '5s'
+      }
+    };
+
+    const mergedElements = [
+      {
+        id: 'path-animate',
+        element: 'path',
+        attrs: {
+          d: ['M0 0 L10 10z', 'M10 10 L20 20z']
+        }
+      }
+    ];
+
+    const html = `
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"/>
+      </svg>`;
+
+    expect(animateFrameElements(html, mergedElements, config)).toBe(`
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="4s" begin="5s"/></path>
       </svg>`
     );
   });

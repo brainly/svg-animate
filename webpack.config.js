@@ -21,6 +21,10 @@ const serverConfig = {
       {
         test: /\.svg$/,
         loader: 'svg-inline-loader'
+      },
+      {
+        test: /\.ya?ml$/,
+        loader: 'js-yaml-loader',
       }
     ]
   },
