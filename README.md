@@ -39,3 +39,18 @@ The **name** of shape that you want to animate should:
 <p align="center">
   <img width="446" alt="svg_options" src="https://user-images.githubusercontent.com/13873576/75358818-c6726f00-58b3-11ea-8c0d-a92fd189ea58.png">
 </p>
+
+## Attributes Configuration
+
+The `frames` directory should contain `config.yml` with the following structure:
+
+```yaml
+default:
+  duration: '1s'
+  delay: '0s'
+
+element-name:
+  duration: '2s'
+```
+
+Where parameters with the element name override the default ones.
