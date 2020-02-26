@@ -4,11 +4,16 @@ const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
 
 const {
-  getAnimatedPaths,
-  replaceAnimatedPaths,
-  combineAnimatedPaths,
-  alternateAnimatedPaths
+  getAnimatedElements,
+  mergeFrameElements,
+  alternateFrameElements,
+  animateFrameElements
 } = require('./svg-helpers');
+
+const spec = {
+  path: ['d'],
+  polygon: ['points'],
+};
 
 class SVGAnimate {
   constructor({
@@ -29,20 +34,23 @@ class SVGAnimate {
       const files = deps.filter(file => file.endsWith('.svg'));
 
       Promise.all(files.map(readFileUtf8))
-        .then(data => this.combineFrames(data))
-        .catch(err => console.error(err));
+        .then(data => this.mergeFrames(data))
+        .catch(error => {
+          throw error; // node requires to catch explicitly
+        });
     });
   }
 
-  combineFrames(frames) {
-    const paths = frames
-      .map(data => getAnimatedPaths(this.selector, data))
-      .reduce(combineAnimatedPaths, {});
+  mergeFrames(frames) {
+    const mergedFrame = mergeFrameElements(
+      // todo: get animated elements only for changed frames
+      frames.map(data => getAnimatedElements(this.selector, data, spec))
+    );
 
     if (this.options.alternateDirection) {
-      alternateAnimatedPaths(paths);
+      alternateFrameElements(mergedFrame);
     }
-    const svg = replaceAnimatedPaths(frames[0], paths);
+    const svg = animateFrameElements(frames[0], mergedFrame);
     this.writeAnimationFile(svg);
   }
 

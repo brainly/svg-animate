@@ -4,64 +4,118 @@ const options = {
   xmlMode: true
 };
 
-function getAnimatedPaths(selector, html) {
-  const $ = cheerio.load(html, options);
-  const animatedPaths = [];
-
-  $(`[id*='${selector}']`).each(function() {
-    const $elem = $(this);
-    animatedPaths.push({
-      id: $elem.attr('id'),
-      def: $elem.attr('d')
-    });
-  });
-  return animatedPaths;
+function cloneElement(elem) {
+  const clone = Object.assign({}, elem);
+  clone.attrs = Object.assign({}, elem.attrs);
+  return clone;
 }
 
-function replaceAnimatedPaths(html, combinedPaths) {
+function getAnimatedElements(selector, html, spec) {
+  const $ = cheerio.load(html, options);
+  const supportedElements = Object.keys(spec);
+  const elements = [];
+
+  if (!supportedElements.length) {
+    return elements;
+  }
+
+  $(`[id*='${selector}']`).each((index, elem) => {
+    const {name, attribs} = elem;
+
+    if (supportedElements.includes(name)) {
+      const attrs = spec[name].reduce((result, attr) => {
+        if (attribs[attr] !== undefined) {
+          result[attr] = attribs[attr];
+        }
+        return result;
+      }, {});
+
+      elements.push({
+        id: attribs.id,
+        element: name,
+        attrs,
+      });
+    }
+  });
+
+  return elements;
+}
+
+function mergeFrameElements(frames) {
+  // merged frames should not contain any references to other frames
+  const mergedFrame = frames[0].map(cloneElement);
+
+  // convert attributes to array and create references
+  const mergedFrameAttrsRefs = mergedFrame.reduce((refs, elem) => {
+    Object.keys(elem.attrs).forEach(attr => {
+      elem.attrs[attr] = [elem.attrs[attr]];
+    });
+    return refs.set(elem.id, elem.attrs);
+  }, new Map);
+
+  for (let i = 1; i < frames.length; i++) {
+    frames[i].forEach(elem => {
+      const ref = mergedFrameAttrsRefs.get(elem.id);
+
+      if (ref !== undefined) {
+        Object.keys(elem.attrs).forEach(attr => {
+          if (ref[attr] !== undefined) {
+            ref[attr].push(elem.attrs[attr]);
+          }
+        });
+      }
+    });
+  }
+
+  return mergedFrame;
+}
+
+function alternateFrameElements(mergedElements) {
+  mergedElements.forEach(elem => {
+    Object.keys(elem.attrs).forEach(attr => {
+      const value = elem.attrs[attr];
+
+      let index = value.length - 1;
+      while (--index >= 0) {
+        value.push(value[index]);
+      }
+    });
+  });
+
+  return mergedElements;
+}
+
+function animateFrameElements(html, mergedElements) {
   const $ = cheerio.load(html, options);
 
-  Object.keys(combinedPaths).forEach(id => {
-    $(`#${id}`).prepend(
-      `<animate
-        attributeName="d"
-        repeatCount="indefinite"
-        dur="2s"
-        values="${combinedPaths[id]}">
-      </animate>`
-    );
+  mergedElements.forEach(elem => {
+    const {id, attrs} = elem;
+    const $elem = $(`#${id}`);
+
+    if (!$elem.length) {
+      return;
+    }
+    const children = Object.keys(attrs).reduce((string, attr) => {
+      return string + `
+        <animate
+          attributeName="${attr}"
+          values="${attrs[attr].join(';')}"
+          repeatCount="indefinite"
+          dur="2s"
+        >
+        </animate>`;
+    }, '');
+
+    $elem.prepend(children);
   });
+
   return $.xml();
 }
 
-function combineAnimatedPaths(result, animatedPaths) {
-  for (let i = 0; i < animatedPaths.length; i++) {
-    const {id, def} = animatedPaths[i];
-
-    if (result[id] === undefined) {
-      result[id] = def;
-    } else {
-      result[id] += `;${def}`;
-    }
-  }
-  return result;
-}
-
-function alternateAnimatedPaths(combinedPaths) {
-  Object.keys(combinedPaths).forEach(id => {
-    const def = combinedPaths[id];
-    const parts = def.split(';');
-
-    parts.pop();
-    parts.reverse();
-    combinedPaths[id] = def + ';' + parts.join(';');
-  });
-  return combinedPaths;
-}
-
 module.exports = {
-  getAnimatedPaths,
-  replaceAnimatedPaths,
-  combineAnimatedPaths,
-  alternateAnimatedPaths
+  cloneElement,
+  getAnimatedElements,
+  mergeFrameElements,
+  alternateFrameElements,
+  animateFrameElements
 };
