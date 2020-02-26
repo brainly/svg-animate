@@ -11,8 +11,8 @@ const {
 } = require('./svg-helpers');
 
 const spec = {
-  path: ['d'],
-  polygon: ['points'],
+  path: ['d', 'fill'],
+  polygon: ['points', 'fill'],
 };
 
 class SVGAnimate {
