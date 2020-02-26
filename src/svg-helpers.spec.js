@@ -221,9 +221,7 @@ describe('animateFrameElements()', () => {
 
     expect(animateFrameElements(html, mergedElements)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z">
-        <animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s">
-        </animate></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s"/></path>
       </svg>`
     );
   });

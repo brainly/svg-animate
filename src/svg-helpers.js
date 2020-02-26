@@ -4,12 +4,6 @@ const options = {
   xmlMode: true
 };
 
-function cloneElement(elem) {
-  const clone = Object.assign({}, elem);
-  clone.attrs = Object.assign({}, elem.attrs);
-  return clone;
-}
-
 function getAnimatedElements(selector, html, spec) {
   const $ = cheerio.load(html, options);
   const supportedElements = Object.keys(spec);
@@ -96,20 +90,35 @@ function animateFrameElements(html, mergedElements) {
       return;
     }
     const children = Object.keys(attrs).reduce((string, attr) => {
-      return string + `
-        <animate
-          attributeName="${attr}"
-          values="${attrs[attr].join(';')}"
-          repeatCount="indefinite"
-          dur="2s"
-        >
-        </animate>`;
+      if (attrs[attr].length > 1) {
+        string += createAnimateElement({
+          attributeName: attr,
+          values: attrs[attr].join(';'),
+          repeatCount: 'indefinite',
+          dur: '2s', // todo: duration
+          begin: '0s' // todo: delay
+        });
+      }
+      return string;
     }, '');
 
     $elem.prepend(children);
   });
 
   return $.xml();
+}
+
+function cloneElement(elem) {
+  const clone = Object.assign({}, elem);
+  clone.attrs = Object.assign({}, elem.attrs);
+  return clone;
+}
+
+function createAnimateElement(attrs) {
+  const mergedAttrs = Object.keys(attrs)
+    .map(name => `${name}="${attrs[name]}"`)
+    .join(' ');
+  return `<animate ${mergedAttrs}></animate>`;
 }
 
 module.exports = {
