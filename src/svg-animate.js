@@ -33,21 +33,24 @@ class SVGAnimate {
   apply(compiler) {
     compiler.hooks.afterEmit.tap('SVGAnimate', compilation => {
       const deps = Array.from(compilation.fileDependencies);
-      const files = deps.filter(file => file.endsWith('.svg'));
+      const framesPath = deps.filter(file => file.endsWith('.svg'));
       const configPath = deps.find(file => file.endsWith('config.yml'));
 
-      // should watch config file
-      this.loadConfig(configPath);
+      // todo: read only when config changed
+      this.loadConfigFile(configPath);
 
-      Promise.all(files.map(readFileUtf8))
-        .then(data => this.mergeFrames(data))
+      Promise.all(framesPath.map(readFileUtf8))
+        .then(frames => {
+          this.createAnimation(frames);
+        })
         .catch(error => {
-          throw error; // node requires to catch explicitly
+          // node requires to catch explicitly
+          throw error;
         });
     });
   }
 
-  mergeFrames(frames) {
+  createAnimation(frames) {
     const mergedFrame = mergeFrameElements(
       // todo: get animated elements only for changed frames
       frames.map(data => getAnimatedElements(this.selector, data, spec))
@@ -64,12 +67,13 @@ class SVGAnimate {
     if (!fs.existsSync(this.outputPath)) {
       fs.mkdirSync(this.outputPath);
     }
+
     fs.writeFile(`${this.outputPath}/${this.outputFile}`, data, () => {
       console.log('🎬 The SVG animation has been created.');
     });
   }
 
-  loadConfig(configPath) {
+  loadConfigFile(configPath) {
     if (configPath) {
       this.config = yaml.load(fs.readFileSync(configPath, 'utf8'));
     } else {
