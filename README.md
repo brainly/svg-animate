@@ -30,7 +30,7 @@ The watcher will open a browser with the animation preview. You can freely add/r
 
 ## How to export SVG frames
 
-The **name** of shape that you want to animate should:
+The element name (shape) to animate should:
 - contain `animate` keyword
 - be unique and the same for all frames
 
@@ -42,7 +42,7 @@ The **name** of shape that you want to animate should:
 
 ## Attributes Configuration
 
-The `frames` directory should contain `config.yml` with the following structure:
+The `frames` directory should contain `config.yml` with the following structure; where attributes with the element name override the default ones.
 
 ```yaml
 default:
@@ -52,5 +52,3 @@ default:
 element-name:
   duration: '2s'
 ```
-
-Where parameters with the element name override the default ones.
