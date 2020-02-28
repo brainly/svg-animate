@@ -1,8 +1,14 @@
 const fs = require('fs');
+const yaml = require('js-yaml');
 const {promisify} = require('util');
+const FilesRevision = require('./files-revision');
+
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
-const yaml = require('js-yaml');
+const loadYamlFile = path =>  yaml.load(fs.readFileSync(path, 'utf8'));
+
+const isFrameFile = file => file.endsWith('.svg');
+const isConfigFile = file => file.endsWith('config.yml');
 
 const {
   getAnimatedElements,
@@ -28,20 +34,38 @@ class SVGAnimate {
     this.outputFile = outputFile;
     this.options = options;
     this.config = {};
+
+    this.frameElements = new Map();
+    this.revision = new FilesRevision();
   }
 
   apply(compiler) {
     compiler.hooks.afterEmit.tap('SVGAnimate', compilation => {
-      const deps = Array.from(compilation.fileDependencies);
-      const framesPath = deps.filter(file => file.endsWith('.svg'));
-      const configPath = deps.find(file => file.endsWith('config.yml'));
+      const changedFiles = this.revision.getChangedFiles(compilation);
+      const configPath = changedFiles.find(isConfigFile);
 
-      // todo: read only when config changed
-      this.loadConfigFile(configPath);
+      if (configPath) {
+        this.config = loadYamlFile(configPath);
+      }
 
-      Promise.all(framesPath.map(readFileUtf8))
-        .then(frames => {
-          this.createAnimation(frames);
+      // process animation frames
+      const baseFramePath = Array.from(compilation.fileDependencies).find(isFrameFile);
+      const changedFramesPath = changedFiles.filter(isFrameFile);
+
+      Promise.all(changedFramesPath.map(readFileUtf8))
+        .then(changedFramesData => {
+          changedFramesData.forEach((data, index) => {
+            const elements = getAnimatedElements(this.selector, data, spec);
+            this.frameElements.set(changedFramesPath[index], elements);
+          });
+
+          if (changedFramesPath[0] === baseFramePath) {
+            this.createAnimation(changedFramesData[0]);
+          } else {
+            readFileUtf8(baseFramePath).then(frameData => {
+              this.createAnimation(frameData);
+            });
+          }
         })
         .catch(error => {
           // node requires to catch explicitly
@@ -50,16 +74,14 @@ class SVGAnimate {
     });
   }
 
-  createAnimation(frames) {
-    const mergedFrame = mergeFrameElements(
-      // todo: get animated elements only for changed frames
-      frames.map(data => getAnimatedElements(this.selector, data, spec))
-    );
+  createAnimation(baseFrameData) {
+    const elements = Array.from(this.frameElements.values());
+    const mergedFrameElements = mergeFrameElements(elements);
 
     if (this.options.alternateDirection) {
-      alternateFrameElements(mergedFrame);
+      alternateFrameElements(mergedFrameElements);
     }
-    const svg = animateFrameElements(frames[0], mergedFrame, this.config);
+    const svg = animateFrameElements(baseFrameData, mergedFrameElements, this.config);
     this.writeAnimationFile(svg);
   }
 
@@ -71,14 +93,6 @@ class SVGAnimate {
     fs.writeFile(`${this.outputPath}/${this.outputFile}`, data, () => {
       console.log('🎬 The SVG animation has been created.');
     });
-  }
-
-  loadConfigFile(configPath) {
-    if (configPath) {
-      this.config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-    } else {
-      this.config = {};
-    }
   }
 }
 
