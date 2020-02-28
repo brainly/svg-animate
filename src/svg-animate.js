@@ -49,8 +49,9 @@ class SVGAnimate {
       }
 
       // process animation frames
-      const baseFramePath = Array.from(compilation.fileDependencies).find(isFrameFile);
       const changedFramesPath = changedFiles.filter(isFrameFile);
+      const baseFramePath = Array.from(compilation.fileDependencies)
+        .find(isFrameFile);
 
       Promise.all(changedFramesPath.map(readFileUtf8))
         .then(changedFramesData => {
