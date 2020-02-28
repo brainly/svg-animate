@@ -5,9 +5,9 @@ class FilesRevision {
   }
 
   getChangedFiles(compilation) {
-    const filesPath = Array.from(compilation.fileTimestamps.keys());
+    const filePaths = Array.from(compilation.fileTimestamps.keys());
 
-    const changedFiles = filesPath.filter(path => {
+    const changedFiles = filePaths.filter(path => {
       const currentTimestamp = compilation.fileTimestamps.get(path) || Infinity;
       return (this.prevTimestamps.get(path) || this.startTime) < currentTimestamp;
     });
