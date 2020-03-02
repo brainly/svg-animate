@@ -56,17 +56,23 @@ function mergeFrameElements(frames) {
     return refs.set(elem.id, elem.attrs);
   }, new Map);
 
-  for (let i = 1; i < frames.length; i++) {
-    frames[i].forEach(elem => {
+  for (let index = 1; index < frames.length; index++) {
+    frames[index].forEach(elem => {
       const ref = mergedFrameAttrsRefs.get(elem.id);
 
-      if (ref !== undefined) {
-        Object.keys(elem.attrs).forEach(attr => {
-          if (ref[attr] !== undefined) {
-            ref[attr].push(elem.attrs[attr]);
-          }
-        });
+      if (ref === undefined) {
+        return;
       }
+      Object.keys(elem.attrs).forEach(attr => {
+        const refAttrValues = ref[attr];
+
+        if (
+          refAttrValues !== undefined &&
+          refAttrValues[refAttrValues.length - 1] !== elem.attrs[attr]
+        ) {
+          refAttrValues.push(elem.attrs[attr]);
+        }
+      });
     });
   }
 
