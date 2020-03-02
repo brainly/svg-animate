@@ -37,9 +37,10 @@ The name of the element to animate should:
 </p>
 
 ## Supported SVG elements
-- path: position, color
-- polygon: position, color
-- polyline: position, color
+- path: d, fill
+- polygon: points, fill
+- polyline: points, stroke
+- line: x1, y1, x2, y2
 
 ## Attributes Configuration
 
