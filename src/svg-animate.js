@@ -20,6 +20,7 @@ const {
 const spec = {
   path: ['d', 'fill'],
   polygon: ['points', 'fill'],
+  polyline: ['points', 'fill']
 };
 
 class SVGAnimate {
