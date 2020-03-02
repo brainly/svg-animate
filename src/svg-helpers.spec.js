@@ -50,7 +50,7 @@ describe('getAnimatedElements()', () => {
         id: 'path-animate',
         element: 'path',
         attrs: {
-          d: 'M0 0 L10 10z'
+          d: 'M0,0C0,0,10,10,10,10C10,10,0,0,0,0'
         }
       },
       {
@@ -74,7 +74,7 @@ describe('getAnimatedElements()', () => {
         id: 'path-animate',
         element: 'path',
         attrs: {
-          d: 'M0 0 L10 10z'
+          d: 'M0,0C0,0,10,10,10,10C10,10,0,0,0,0'
         }
       }
     ]);

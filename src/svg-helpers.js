@@ -1,4 +1,8 @@
 const cheerio = require('cheerio');
+const parse = require('parse-svg-path');
+const abs = require('abs-svg-path');
+const normalize = require('normalize-svg-path');
+const serialize = require('serialize-svg-path');
 
 const options = {
   xmlMode: true
@@ -18,7 +22,12 @@ function getAnimatedElements(selector, html, spec) {
 
     if (supportedElements.includes(name)) {
       const attrs = spec[name].reduce((result, attr) => {
-        if (attribs[attr] !== undefined) {
+        if (attribs[attr] === undefined) {
+          return result;
+        }
+        if (attr === 'd') {
+          result[attr] = normalizePathDefinition(attribs[attr])
+        } else {
           result[attr] = attribs[attr];
         }
         return result;
@@ -124,6 +133,10 @@ function createAnimateElement(attrs) {
     .map(name => `${name}="${attrs[name]}"`)
     .join(' ');
   return `<animate ${mergedAttrs}></animate>`;
+}
+
+function normalizePathDefinition(def) {
+  return serialize(normalize(abs(parse(def))));
 }
 
 module.exports = {

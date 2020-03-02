@@ -39,6 +39,7 @@ The name of the element to animate should:
 ## Supported SVG elements
 - path: position, color
 - polygon: position, color
+- polyline: position, color
 
 ## Attributes Configuration
 
