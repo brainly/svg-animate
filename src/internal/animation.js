@@ -62,7 +62,7 @@ function injectAnimatedFrame(
         delay = '0s'
       } = config[id] || config['default'] || {};
 
-      return string + createAnimateElement({
+      return string + createSVGAnimateElement({
         attributeName: attr,
         values: attrs[attr].join(';'),
         repeatCount: 'indefinite',
@@ -77,7 +77,7 @@ function injectAnimatedFrame(
   return $.xml();
 }
 
-function createAnimateElement(attrs: {[name: string]: number | string}) {
+function createSVGAnimateElement(attrs: {[name: string]: number | string}) {
   const mergedAttrs = Object.keys(attrs)
     .map(name => `${name}="${attrs[name]}"`)
     .join(' ');

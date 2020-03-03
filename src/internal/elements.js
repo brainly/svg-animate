@@ -33,27 +33,29 @@ function getAnimatedElements(
 
   $(`[id*='${selector}']`).each((index, elem) => {
     const {name, attribs} = elem;
+    const attrs = {};
 
-    if (supportedElements.includes(name)) {
-      const attrs = {};
-
-      supportedElementAttrs[name].forEach(attr => {
-        if (attribs[attr] === undefined) {
-          return;
-        }
-        if (attr === 'd') {
-          attrs[attr] = [normalizePathData(attribs[attr])];
-        } else {
-          attrs[attr] = [attribs[attr]];
-        }
-      });
-
-      elements.push({
-        id: attribs.id,
-        element: name,
-        attrs,
-      });
+    if (!supportedElements.includes(name)) {
+      return;
     }
+    supportedElementAttrs[name].forEach(attr => {
+      const attrValue = attribs[attr];
+
+      if (attrValue === undefined) {
+        return;
+      }
+      if (attr === 'd') {
+        attrs[attr] = [normalizePathData(attrValue)];
+      } else {
+        attrs[attr] = [attrValue];
+      }
+    });
+
+    elements.push({
+      id: attribs.id,
+      element: name,
+      attrs,
+    });
   });
 
   return elements;
