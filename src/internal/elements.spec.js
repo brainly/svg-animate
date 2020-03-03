@@ -1,8 +1,8 @@
-const {
+import {
   cloneAnimatedElement,
   getAnimatedElements,
   alternateAnimatedElementAttrs,
-} = require('./elements');
+} from './elements';
 
 describe('cloneAnimatedElement()', () => {
   it('should create new instances', () => {

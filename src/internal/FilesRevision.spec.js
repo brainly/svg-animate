@@ -1,4 +1,4 @@
-const FilesRevision = require('./files-revision');
+import FilesRevision from './FilesRevision';
 
 global.Date.now = jest.fn();
 

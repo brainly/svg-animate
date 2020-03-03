@@ -1,10 +1,17 @@
+// @flow strict
+
+import type {CompilationType} from './types';
+
 class FilesRevision {
+  startTime: number;
+  prevTimestamps: Map<string, number>
+
   constructor() {
     this.startTime = Date.now();
     this.prevTimestamps = new Map();
   }
 
-  getChangedFiles(compilation) {
+  getChangedFiles(compilation: CompilationType): Array<string> {
     const existingFiles = Array.from(compilation.fileTimestamps.keys());
 
     const changedFiles = existingFiles.filter(path => {
@@ -24,4 +31,4 @@ class FilesRevision {
   }
 }
 
-module.exports = FilesRevision;
+export default FilesRevision;

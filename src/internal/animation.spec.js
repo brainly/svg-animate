@@ -1,7 +1,7 @@
-const {
+import {
   mergeAnimatedFrames,
   injectAnimatedFrame
-} = require('./animation');
+} from './animation';
 
 describe('mergeAnimatedFrames()', () => {
   it('should merge elements with same id from different frames', () => {

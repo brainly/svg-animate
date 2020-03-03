@@ -10,9 +10,6 @@ module.exports = {
     filename: 'SVGAnimate.js',
     libraryTarget: 'umd',
   },
-  devServer: {
-    contentBase: path.join(__dirname, 'plugin'),
-  },
   module: {
     rules: [
       {
