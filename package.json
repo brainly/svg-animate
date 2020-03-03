@@ -4,13 +4,20 @@
   "repository": "git@github.com:brainly/svg-animate.git",
   "description": "",
   "author": "Brainly Team",
-  "license": "GPLv3",
+  "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "yarn build-plugin && webpack-dev-server",
+    "build-plugin": "webpack --config webpack.plugin.config.js"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-flow": "^7.8.3",
     "abs-svg-path": "^0.1.1",
+    "babel-loader": "^8.0.6",
     "cheerio": "^1.0.0-rc.3",
+    "flow-bin": "^0.119.1",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^25.1.0",
     "js-yaml": "^3.13.1",

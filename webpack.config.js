@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SVGAnimate = require('./src/svg-animate');
+const SVGAnimate = require('./plugin/SVGAnimate');
 
 const devServer = {
   contentBase: path.join(__dirname, 'output'),
