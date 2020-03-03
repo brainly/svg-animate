@@ -6,9 +6,8 @@
   "author": "Brainly Team",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server",
-    "start-plugin": "webpack-dev-server --config webpack.plugin.config.js",
-    "build-plugin": "webpack -p --config webpack.plugin.config.js"
+    "start": "yarn build-plugin && webpack-dev-server",
+    "build-plugin": "webpack --config webpack.plugin.config.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
