@@ -8,6 +8,9 @@
         }
       }
     ],
-    "@babel/preset-flow",
+    "@babel/preset-flow"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-modules-commonjs"
   ]
 }

@@ -1,5 +1,5 @@
 // @flow strict
 
-module.exports = {
+export default {
   xmlMode: true
 };

@@ -1,21 +1,23 @@
 // @flow strict
 
-const cheerio = require('cheerio');
-const options = require('./xmlOptions');
-const {cloneAnimatedElement} = require('./elements');
+import cheerio from 'cheerio';
+import options from './xmlOptions';
+import {cloneAnimatedElement} from './elements';
 
-import type {AnimatedElement} from './elements';
-export type AnimatedFrame = Array<AnimatedElement>;
+import type {
+  AnimatedElement,
+  AnimatedFrame,
+  ConfigType,
+} from './types';
 
-function mergeAnimatedFrames(frames: Array<AnimatedFrame>) {
+export function mergeAnimatedFrames(frames: Array<AnimatedFrame>) {
   // merged frame should not contain any references to other frames
   const mergedFrame = frames[0].map<AnimatedElement>(cloneAnimatedElement);
-
-  // create references to the merged frame
   const mergedFrameAttrsRefs = mergedFrame.reduce((refs, elem) => {
     return refs.set(elem.id, elem.attrs);
   }, new Map<string, $PropertyType<AnimatedElement, 'attrs'>>);
 
+  // merge other frames to the first one
   for (let index = 1; index < frames.length; index++) {
     frames[index].forEach(elem => {
       const ref = mergedFrameAttrsRefs.get(elem.id);
@@ -39,10 +41,10 @@ function mergeAnimatedFrames(frames: Array<AnimatedFrame>) {
   return mergedFrame;
 }
 
-function injectAnimatedFrame(
+export function injectAnimatedFrame(
   html: string,
   animatedFrame: AnimatedFrame,
-  config: any = {}
+  config: ConfigType = {}
 ) {
   const $ = cheerio.load(html, options);
 
@@ -77,14 +79,9 @@ function injectAnimatedFrame(
   return $.xml();
 }
 
-function createSVGAnimateElement(attrs: {[name: string]: number | string}) {
+export function createSVGAnimateElement(attrs: {[name: string]: number | string}) {
   const mergedAttrs = Object.keys(attrs)
     .map(name => `${name}="${attrs[name]}"`)
     .join(' ');
   return `<animate ${mergedAttrs}></animate>`;
 }
-
-module.exports = {
-  mergeAnimatedFrames,
-  injectAnimatedFrame
-};

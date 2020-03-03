@@ -1,21 +1,28 @@
-const fs = require('fs');
-const yaml = require('js-yaml');
-const {promisify} = require('util');
+// @flow strict
+
+import fs from 'fs';
+import yaml from 'js-yaml';
+import {promisify} from 'util';
+import FilesRevision from './internal/FilesRevision';
+import {
+  getAnimatedElements,
+  cloneAnimatedElement,
+  alternateAnimatedElementAttrs
+} from './internal/elements';
+import {
+  mergeAnimatedFrames,
+  injectAnimatedFrame
+} from './internal/animation';
+
+import type {
+  OptionsType,
+  ConfigType,
+  AnimatedFrame,
+} from './internal/types';
 
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
 const loadYamlFile = path =>  yaml.load(fs.readFileSync(path, 'utf8'));
-const FilesRevision = require('./internal/FilesRevision');
-
-const {
-  getAnimatedElements,
-  cloneAnimatedElement,
-  alternateAnimatedElementAttrs
-} = require('./internal/elements');
-const {
-  mergeAnimatedFrames,
-  injectAnimatedFrame
-} = require('./internal/animation');
 
 const isFrameFile = file => file.endsWith('.svg');
 const isConfigFile = file => file.endsWith('config.yml');
@@ -28,11 +35,25 @@ const supportedElementAttrs = {
 };
 
 class SVGAnimate {
+  selector: string;
+  outputPath: string;
+  outputFile: string;
+  options: OptionsType;
+  config: ConfigType;
+
+  animatedFrames: Map<string, AnimatedFrame>;
+  revision: FilesRevision;
+
   constructor({
     selector = 'animate',
     outputPath = '',
     outputFile = '',
     options
+  }: {
+    selector: string;
+    outputPath: string;
+    outputFile: string;
+    options: OptionsType;
   }) {
     this.selector = selector;
     this.outputPath = outputPath;
@@ -44,7 +65,7 @@ class SVGAnimate {
     this.revision = new FilesRevision();
   }
 
-  apply(compiler) {
+  apply(compiler: any) {
     compiler.hooks.afterEmit.tap('SVGAnimate', compilation => {
       const changedFiles = this.revision.getChangedFiles(compilation);
       const configPath = changedFiles.find(isConfigFile);
@@ -80,7 +101,7 @@ class SVGAnimate {
     });
   }
 
-  createAnimation(data) {
+  createAnimation(data: string) {
     const frames = Array.from(this.animatedFrames.values());
     const mergedFrame = mergeAnimatedFrames(frames);
 
@@ -91,7 +112,7 @@ class SVGAnimate {
     this.writeAnimationFile(svg);
   }
 
-  writeAnimationFile(data) {
+  writeAnimationFile(data: string) {
     if (!fs.existsSync(this.outputPath)) {
       fs.mkdirSync(this.outputPath);
     }

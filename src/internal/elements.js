@@ -1,24 +1,15 @@
 // @flow strict
 
-const cheerio = require('cheerio');
-const parse = require('parse-svg-path');
-const abs = require('abs-svg-path');
-const normalize = require('normalize-svg-path');
-const serialize = require('serialize-svg-path');
+import cheerio from 'cheerio';
+import parse from 'parse-svg-path';
+import abs from 'abs-svg-path';
+import normalize from 'normalize-svg-path';
+import serialize from 'serialize-svg-path';
+import options from './xmlOptions';
 
-const options = require('./xmlOptions');
+import type {SupportedElementAttrs, AnimatedElement} from './types';
 
-export type SupportedElementAttrs = {
-  [elementName: string]: Array<string>
-};
-
-export type AnimatedElement = {
-  id: string,
-  element: string,
-  attrs: {[attr: string]: Array<string>}
-};
-
-function getAnimatedElements(
+export function getAnimatedElements(
   html: string,
   selector: string,
   supportedElementAttrs: SupportedElementAttrs
@@ -61,7 +52,7 @@ function getAnimatedElements(
   return elements;
 }
 
-function cloneAnimatedElement(elem: AnimatedElement) {
+export function cloneAnimatedElement(elem: AnimatedElement) {
   const clone = Object.assign({}, elem);
   const attrs = Object.assign({}, elem.attrs);
 
@@ -73,7 +64,7 @@ function cloneAnimatedElement(elem: AnimatedElement) {
   return clone;
 }
 
-function alternateAnimatedElementAttrs(elem: AnimatedElement) {
+export function alternateAnimatedElementAttrs(elem: AnimatedElement) {
   Object.keys(elem.attrs).forEach(attr => {
     const value = elem.attrs[attr];
 
@@ -87,9 +78,3 @@ function alternateAnimatedElementAttrs(elem: AnimatedElement) {
 function normalizePathData(data) {
   return serialize(normalize(abs(parse(data))));
 }
-
-module.exports = {
-  getAnimatedElements,
-  cloneAnimatedElement,
-  alternateAnimatedElementAttrs,
-};
