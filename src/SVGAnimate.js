@@ -1,23 +1,26 @@
 const fs = require('fs');
 const yaml = require('js-yaml');
 const {promisify} = require('util');
-const FilesRevision = require('./files-revision');
 
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
 const loadYamlFile = path =>  yaml.load(fs.readFileSync(path, 'utf8'));
+const FilesRevision = require('./internal/FilesRevision');
+
+const {
+  getAnimatedElements,
+  cloneAnimatedElement,
+  alternateAnimatedElementAttrs
+} = require('./internal/elements');
+const {
+  mergeAnimatedFrames,
+  injectAnimatedFrame
+} = require('./internal/animation');
 
 const isFrameFile = file => file.endsWith('.svg');
 const isConfigFile = file => file.endsWith('config.yml');
 
-const {
-  getAnimatedElements,
-  mergeFrameElements,
-  alternateFrameElements,
-  animateFrameElements
-} = require('./svg-helpers');
-
-const spec = {
+const supportedElementAttrs = {
   path: ['d', 'fill'],
   polygon: ['points', 'fill'],
   polyline: ['points', 'stroke'],
@@ -37,7 +40,7 @@ class SVGAnimate {
     this.options = options;
     this.config = {};
 
-    this.frameElements = new Map();
+    this.animatedFrames = new Map();
     this.revision = new FilesRevision();
   }
 
@@ -58,8 +61,8 @@ class SVGAnimate {
       Promise.all(changedFramesPath.map(readFileUtf8))
         .then(changedFramesData => {
           changedFramesData.forEach((data, index) => {
-            const elements = getAnimatedElements(this.selector, data, spec);
-            this.frameElements.set(changedFramesPath[index], elements);
+            const elements = getAnimatedElements(data, this.selector, supportedElementAttrs);
+            this.animatedFrames.set(changedFramesPath[index], elements);
           });
 
           if (changedFramesPath[0] === baseFramePath) {
@@ -77,14 +80,14 @@ class SVGAnimate {
     });
   }
 
-  createAnimation(baseFrameData) {
-    const elements = Array.from(this.frameElements.values());
-    const mergedFrameElements = mergeFrameElements(elements);
+  createAnimation(data) {
+    const frames = Array.from(this.animatedFrames.values());
+    const mergedFrame = mergeAnimatedFrames(frames);
 
     if (this.options.alternateDirection) {
-      alternateFrameElements(mergedFrameElements);
+      mergedFrame.forEach(alternateAnimatedElementAttrs);
     }
-    const svg = animateFrameElements(baseFrameData, mergedFrameElements, this.config);
+    const svg = injectAnimatedFrame(data, mergedFrame, this.config);
     this.writeAnimationFile(svg);
   }
 
