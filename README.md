@@ -50,7 +50,44 @@ The `frames` directory should contain `config.yml` with the following structure;
 default:
   duration: '1s'
   delay: '0s'
+  easing: 'ease'
 
 element-name:
   duration: '2s'
 ```
+
+## Supported Easing Types
+
+- linear
+- ease
+- easeIn
+- easeOut
+- easeInOut
+- easeInQuad
+- easeInCubic
+- easeInQuart
+- easeInQuint
+- easeInSine
+- easeInExpo
+- easeInCirc
+- easeInBack
+- easeOutQuad
+- easeOutCubic
+- easeOutQuart
+- easeOutQuint
+- easeOutSine
+- easeOutExpo
+- easeOutCirc
+- easeOutBack
+- easeInOutQuad
+- easeInOutCubic
+- easeInOutQuart
+- easeInOutQuint
+- easeInOutSine
+- easeInOutExpo
+- easeInOutCirc
+- easeInOutBack
+
+Find best easing type for your animation here:
+- [https://easings.net/en](https://easings.net/en)
+- [https://matthewlein.com/tools/ceaser](https://matthewlein.com/tools/ceaser)

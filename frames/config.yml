@@ -1,6 +1,7 @@
 default:
   duration: '1s'
   delay: '0s'
+  easing: 'ease'
 
 # parameters with an element name
 # override the default ones
