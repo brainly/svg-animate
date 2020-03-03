@@ -3,6 +3,7 @@
 import cheerio from 'cheerio';
 import options from './xmlOptions';
 import {cloneAnimatedElement} from './elements';
+import {getEasing} from './easings';
 
 import type {
   AnimatedElement,
@@ -61,15 +62,19 @@ export function injectAnimatedFrame(
       }
       const {
         duration = '1s',
-        delay = '0s'
+        delay = '0s',
+        easing = 'ease'
       } = config[id] || config['default'] || {};
 
       return string + createSVGAnimateElement({
         attributeName: attr,
+        attributeType: 'XML',
         values: attrs[attr].join(';'),
         repeatCount: 'indefinite',
         dur: duration,
-        begin: delay
+        begin: delay,
+        calcMode: 'spline',
+        keySplines: getEasing(easing)
       });
     }, '');
 

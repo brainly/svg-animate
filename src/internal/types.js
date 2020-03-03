@@ -26,5 +26,6 @@ export type ConfigType = $ReadOnly<{
   [elementName: string]: {
     duration?: string,
     delay?: string,
+    easing?: string
   }
 }>;
