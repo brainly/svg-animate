@@ -74,7 +74,7 @@ export function injectAnimatedFrame(
         dur: duration,
         begin: delay,
         calcMode: 'spline',
-        keySplines: getEasing(easing)
+        keySplines: getEasing(easing, attrs[attr].length)
       });
     }, '');
 
