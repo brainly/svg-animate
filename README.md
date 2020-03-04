@@ -44,7 +44,7 @@ The name of the element to animate should:
 
 ## Attributes Configuration
 
-The `frames` directory should contain `config.yml` with the following structure; where attributes with the element name override the default ones.
+The `frames` directory should contain `config.yml` with the following structure; where the attributes of the specified element override the default.
 
 ```yaml
 default:
@@ -52,8 +52,8 @@ default:
   delay: '0s'
   easing: 'ease'
 
-element-name:
-  duration: '2s'
+your-element-name:
+  duration: '500ms' # overrides default duration
 ```
 
 ## Supported Easing Types
@@ -89,5 +89,7 @@ element-name:
 - easeInOutBack
 
 Find best easing type for your animation here:
-- [https://easings.net/en](https://easings.net/en)
 - [https://matthewlein.com/tools/ceaser](https://matthewlein.com/tools/ceaser)
+
+## Limitations
+It basically morphs one shape into another, so transformations: `translate`, `scale`, `rotate`, `skewX`, and `skewY` are not supported.
