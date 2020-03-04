@@ -3,8 +3,8 @@ default:
   delay: '0s'
   easing: 'ease'
 
-# parameters with an element name
-# override the default ones
+# attributes of the specified
+# elements override the default
 
-element-name:
-  duration: '2s'
+your-element-name:
+  duration: '500ms'
