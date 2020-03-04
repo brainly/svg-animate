@@ -1,19 +1,5 @@
 # Brainly SVG Animate
 
-## Install
-
-First clone this repository.
-
-```bash
-git clone https://github.com/brainly/svg-animate.git
-```
-
-Then install all necessary dependencies with yarn.
-
-```bash
-yarn
-```
-
 ## How to use it
 
 Put all SVG files (aka frames) to `frames` directory and run watcher.
