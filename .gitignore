@@ -4,7 +4,8 @@ yarn-error.log
 /.vscode/settings.json
 *.DS_Store
 
-frames/*.svg
-frames/*.json
+frames
+!frames/PUT_SVG_HERE.txt
+!frames/config.yml
 output
 plugin
