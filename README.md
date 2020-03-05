@@ -2,6 +2,12 @@
 
 ## How to use it
 
+Create an initial [config](#attributes-configuration) file.
+
+```bash
+yarn init-config
+```
+
 Put all SVG files (aka frames) to `frames` directory and run watcher.
 
 ```bash
