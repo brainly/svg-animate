@@ -1,0 +1,23 @@
+#!/bin/bash
+
+CONFIG=frames/config.yml
+
+if [ -e $CONFIG ]; then
+  echo "$CONFIG already exists"
+else
+
+cat <<EOF > $CONFIG
+default:
+  duration: '1s'
+  delay: '0s'
+  easing: 'ease'
+
+# attributes of the specified
+# elements override the default
+
+your-element-name:
+  duration: '500ms'
+EOF
+
+  echo "$CONFIG has been created"
+fi

@@ -1,19 +1,21 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SVGAnimate = require('./plugin/SVGAnimate');
+const SVGAnimate = require('./temp/SVGAnimate');
+
+const outputPath = path.join(__dirname, 'temp');
 
 const devServer = {
-  contentBase: path.join(__dirname, 'output'),
-  open: true,
+  contentBase: outputPath,
+  // open: true,
 };
 
-const serverConfig = {
+const animationConfig = {
   target: 'node',
   mode: 'development',
-  entry: './server.js',
+  entry: './src/frames.js',
   output: {
-    path: path.join(__dirname, 'output'),
-    filename: 'server.js'
+    path: outputPath,
+    filename: 'frames.js'
   },
   devServer,
   module: {
@@ -31,7 +33,7 @@ const serverConfig = {
   plugins: [
     new SVGAnimate({
       selector: 'animate',
-      outputPath: path.join(__dirname, 'output'),
+      outputPath,
       outputFile: 'animation.svg',
       options: {
         alternateDirection: true,
@@ -43,19 +45,19 @@ const serverConfig = {
 const clientConfig = {
   target: 'web',
   mode: 'development',
-  entry: './client.js',
+  entry: './src/client/index.js',
   output: {
-    path: path.join(__dirname, 'output'),
+    path: outputPath,
     filename: 'client.js'
   },
   devServer,
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/client/index.html',
+      template: './src/client/index.html',
       animationPath: 'animation.svg'
     }),
   ]
 };
 
-module.exports = [serverConfig, clientConfig];
+module.exports = [animationConfig, clientConfig];

@@ -4,9 +4,9 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   target: 'node',
   mode: 'development',
-  entry: './src/SVGAnimate.js',
+  entry: './src/index.js',
   output: {
-    path: path.join(__dirname, 'plugin'),
+    path: path.join(__dirname, 'temp'),
     filename: 'SVGAnimate.js',
     libraryTarget: 'umd',
   },
