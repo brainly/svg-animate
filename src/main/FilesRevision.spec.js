@@ -6,11 +6,8 @@ describe('FilesRevision()', () => {
   it('should return all dependencies for initial build', () => {
     const revision = new FilesRevision();
 
-    const fileDependencies = new Set();
+    const fileDependencies = new Set(['frame01.svg', 'frame02.svg']);
     const fileTimestamps = new Map();
-
-    fileDependencies.add('frame01.svg');
-    fileDependencies.add('frame02.svg');
 
     const compilation = {
       fileDependencies,
@@ -27,13 +24,11 @@ describe('FilesRevision()', () => {
 
     const revision = new FilesRevision();
 
-    const fileDependencies = new Set();
-    const fileTimestamps = new Map();
-
-    fileDependencies.add('frame01.svg');
-    fileDependencies.add('frame02.svg');
-    fileTimestamps.set('frame01.svg', 10000);
-    fileTimestamps.set('frame02.svg', 30000);
+    const fileDependencies = new Set(['frame01.svg', 'frame02.svg']);
+    const fileTimestamps = new Map([
+      ['frame01.svg', 10000],
+      ['frame02.svg', 30000]
+    ]);
 
     const compilation = {
       fileDependencies,
