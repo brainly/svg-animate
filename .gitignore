@@ -1,11 +1,8 @@
 node_modules
-coverage
 yarn-error.log
-/.vscode/settings.json
+.vscode/settings.json
 *.DS_Store
 
 frames
 !frames/PUT_SVG_HERE.txt
-!frames/config.yml
-output
-plugin
+temp

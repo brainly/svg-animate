@@ -3,22 +3,20 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import {promisify} from 'util';
-import FilesRevision from './internal/FilesRevision';
-import {
-  getAnimatedElements,
-  cloneAnimatedElement,
-  alternateAnimatedElementAttrs
-} from './internal/elements';
-import {
-  mergeAnimatedFrames,
-  injectAnimatedFrame
-} from './internal/animation';
 
+import {supportedElementAttrs} from './support';
+import FilesRevision from './FilesRevision';
+import alternateAttributes from './animatedElements/alternateAttributes';
+import cloneAnimatedElement from './animatedElements/cloneAnimatedElement';
+import getAnimatedElements from './animatedElements/getAnimatedElements';
+import mergeAnimatedFrames from './animatedFrames/mergeAnimatedFrames';
+import injectAnimatedFrame from './animatedFrames/injectAnimatedFrame';
 import type {
-  OptionsType,
-  ConfigType,
   AnimatedFrame,
-} from './internal/types';
+  CompilationType,
+  ConfigType,
+  OptionsType
+} from './types';
 
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
@@ -26,13 +24,6 @@ const loadYamlFile = path =>  yaml.load(fs.readFileSync(path, 'utf8'));
 
 const isFrameFile = file => file.endsWith('.svg');
 const isConfigFile = file => file.endsWith('config.yml');
-
-const supportedElementAttrs = {
-  path: ['d', 'fill'],
-  polygon: ['points', 'fill'],
-  polyline: ['points', 'stroke'],
-  line: ['x1', 'y1', 'x2', 'y2']
-};
 
 class SVGAnimate {
   selector: string;
@@ -65,8 +56,9 @@ class SVGAnimate {
     this.revision = new FilesRevision();
   }
 
+  // todo: validate this.animatedFrames in case of removed files
   apply(compiler: any) {
-    compiler.hooks.afterEmit.tap('SVGAnimate', compilation => {
+    compiler.hooks.afterEmit.tap('SVGAnimate', (compilation: CompilationType) => {
       const changedFiles = this.revision.getChangedFiles(compilation);
       const configPath = changedFiles.find(isConfigFile);
 
@@ -78,6 +70,11 @@ class SVGAnimate {
       const changedFramesPath = changedFiles.filter(isFrameFile);
       const baseFramePath = Array.from(compilation.fileDependencies)
         .find(isFrameFile);
+
+      if (changedFramesPath.length === 0) {
+        console.log('😥 There are no frames to animate.');
+        return;
+      }
 
       Promise.all(changedFramesPath.map(readFileUtf8))
         .then(changedFramesData => {
@@ -106,7 +103,7 @@ class SVGAnimate {
     const mergedFrame = mergeAnimatedFrames(frames);
 
     if (this.options.alternateDirection) {
-      mergedFrame.forEach(alternateAnimatedElementAttrs);
+      mergedFrame.forEach(alternateAttributes);
     }
     const svg = injectAnimatedFrame(data, mergedFrame, this.config);
     this.writeAnimationFile(svg);
@@ -123,4 +120,4 @@ class SVGAnimate {
   }
 }
 
-module.exports = SVGAnimate;
+export default SVGAnimate;

@@ -1,33 +1,4 @@
-import {
-  cloneAnimatedElement,
-  getAnimatedElements,
-  alternateAnimatedElementAttrs,
-} from './elements';
-
-describe('cloneAnimatedElement()', () => {
-  it('should create new instances', () => {
-    const element = {
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z']
-      }
-    };
-
-    const clone = cloneAnimatedElement(element);
-    expect(element).not.toBe(clone);
-    expect(element.attrs).not.toBe(clone.attrs);
-    expect(element.attrs['d']).not.toBe(clone.attrs['d']);
-
-    expect(clone).toEqual({
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z']
-      }
-    });
-  });
-});
+import getAnimatedElements from './getAnimatedElements';
 
 describe('getAnimatedElements()', () => {
   const spec = {
@@ -102,45 +73,5 @@ describe('getAnimatedElements()', () => {
         }
       }
     ]);
-  });
-});
-
-describe('alternateAnimatedElementAttrs()', () => {
-  it('should repeat inverted attributes', () => {
-    const mergedElement = {
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z', 'M10 10 L20 20z']
-      }
-    };
-
-    alternateAnimatedElementAttrs(mergedElement)
-    expect(mergedElement).toEqual({
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z', 'M10 10 L20 20z', 'M0 0 L10 10z']
-      }
-    });
-  });
-
-  it('should not repeat inversion for single attribute', () => {
-    const element = {
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z']
-      }
-    };
-
-    alternateAnimatedElementAttrs(element)
-    expect(element).toEqual({
-      id: 'path-animate',
-      element: 'path',
-      attrs: {
-        d: ['M0 0 L10 10z']
-      }
-    });
   });
 });
