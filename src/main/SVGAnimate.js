@@ -56,7 +56,6 @@ class SVGAnimate {
     this.revision = new FilesRevision();
   }
 
-  // todo: validate this.animatedFrames in case of removed files
   apply(compiler: any) {
     compiler.hooks.afterEmit.tap('SVGAnimate', (compilation: CompilationType) => {
       const dependency = Array.from(compilation.fileDependencies);
