@@ -6,7 +6,7 @@ const outputPath = path.join(__dirname, 'temp');
 
 const devServer = {
   contentBase: outputPath,
-  // open: true,
+  open: true,
 };
 
 const animationConfig = {
