@@ -19,7 +19,30 @@ describe('injectAnimatedFrame()', () => {
 
     expect(injectAnimatedFrame(html, mergedElements)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="1s" begin="0s" calcMode="spline" keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1"/></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="1s" begin="0s" calcMode="spline" keySplines=".25 .1 .25 1"/></path>
+      </svg>`
+    );
+  });
+
+  it('should append animate element based on merged multiple frames', () => {
+    const mergedElements = [
+      {
+        id: 'path-animate',
+        element: 'path',
+        attrs: {
+          d: ['M0 0 L10 10z', 'M10 10 L20 20z', 'M10 20 L20 30z']
+        }
+      }
+    ];
+
+    const html = `
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"/>
+      </svg>`;
+
+    expect(injectAnimatedFrame(html, mergedElements)).toBe(`
+      <svg>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z;M10 20 L20 30z" repeatCount="indefinite" dur="1s" begin="0s" calcMode="spline" keySplines=".25 .1 .25 1;.25 .1 .25 1"/></path>
       </svg>`
     );
   });
@@ -72,7 +95,7 @@ describe('injectAnimatedFrame()', () => {
 
     expect(injectAnimatedFrame(html, mergedElements, config)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s" calcMode="spline" keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1"/></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s" calcMode="spline" keySplines=".25 .1 .25 1"/></path>
       </svg>`
     );
   });
@@ -102,7 +125,7 @@ describe('injectAnimatedFrame()', () => {
 
     expect(injectAnimatedFrame(html, mergedElements, config)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s" calcMode="spline" keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1"/></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="2s" begin="3s" calcMode="spline" keySplines=".25 .1 .25 1"/></path>
       </svg>`
     );
   });
@@ -132,7 +155,7 @@ describe('injectAnimatedFrame()', () => {
 
     expect(injectAnimatedFrame(html, mergedElements, config)).toBe(`
       <svg>
-        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="4s" begin="5s" calcMode="spline" keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1"/></path>
+        <path id="path-animate" d="M0 0 L10 10z"><animate attributeName="d" attributeType="XML" values="M0 0 L10 10z;M10 10 L20 20z" repeatCount="indefinite" dur="4s" begin="5s" calcMode="spline" keySplines=".25 .1 .25 1"/></path>
       </svg>`
     );
   });

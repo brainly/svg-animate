@@ -20,6 +20,7 @@ export type AnimatedFrame = Array<AnimatedElement>;
 
 export type OptionsType = $ReadOnly<{
   alternateDirection: boolean,
+  pathPrecision?: number,
 }>;
 
 export type ConfigType = $ReadOnly<{

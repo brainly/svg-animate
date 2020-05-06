@@ -1,23 +1,27 @@
 // @flow strict
 
 import {parseHtml} from '../parser';
-import parse from 'parse-svg-path';
-import abs from 'abs-svg-path';
-import normalize from 'normalize-svg-path';
-import serialize from 'serialize-svg-path';
-import type {SupportedElementAttrs, AnimatedElement} from '../types';
+import normalizePathData from './normalizePathData';
+import type {
+  SupportedElementAttrs,
+  AnimatedElement,
+  OptionsType,
+} from '../types';
 
-const normalizePathData = data => {
-  return serialize(normalize(abs(parse(data))));
-};
-
-function getAnimatedElements(
+function getAnimatedElements({
+  html,
+  selector,
+  supportedElementAttrs,
+  options = {},
+}: {
   html: string,
   selector: string,
-  supportedElementAttrs: SupportedElementAttrs
-): Array<AnimatedElement> {
+  supportedElementAttrs: SupportedElementAttrs,
+  options?: OptionsType,
+}): Array<AnimatedElement> {
   const $ = parseHtml(html);
   const supportedElements = Object.keys(supportedElementAttrs);
+  const {pathPrecision = -1} = options;
   const elements = [];
 
   if (!supportedElements.length) {
@@ -38,7 +42,7 @@ function getAnimatedElements(
         return;
       }
       if (attr === 'd') {
-        attrs[attr] = [normalizePathData(attrValue)];
+        attrs[attr] = [normalizePathData(attrValue, pathPrecision)];
       } else {
         attrs[attr] = [attrValue];
       }
