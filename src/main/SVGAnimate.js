@@ -73,7 +73,12 @@ class SVGAnimate {
       Promise.all(changedFramesPath.map(readFileUtf8))
         .then(changedFramesData => {
           changedFramesData.forEach((data, index) => {
-            const elements = getAnimatedElements(data, this.selector, supportedElementAttrs);
+            const elements = getAnimatedElements({
+              html: data,
+              selector: this.selector,
+              supportedElementAttrs,
+              options: this.options,
+            });
             this.animatedFrames.set(changedFramesPath[index], elements);
           });
 

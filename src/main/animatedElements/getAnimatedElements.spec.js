@@ -1,7 +1,7 @@
 import getAnimatedElements from './getAnimatedElements';
 
 describe('getAnimatedElements()', () => {
-  const spec = {
+  const supportedElementAttrs = {
     path: ['d'],
     polygon: ['points'],
   };
@@ -12,7 +12,13 @@ describe('getAnimatedElements()', () => {
         <rect id="rect-animate" width="100" height="100"/>
       </svg>`;
 
-    expect(getAnimatedElements(html, 'animate', spec)).toEqual([]);
+    expect(
+      getAnimatedElements({
+        html,
+        selector: 'animate',
+        supportedElementAttrs,
+      })
+    ).toEqual([]);
   });
 
   it('should parse all supported elements', () => {
@@ -23,7 +29,13 @@ describe('getAnimatedElements()', () => {
         <polygon id="polygon-animate" points="M0 0 L10 10z"/>
       </svg>`;
 
-    expect(getAnimatedElements(html, 'animate', spec)).toEqual([
+    expect(
+      getAnimatedElements({
+        html,
+        selector: 'animate',
+        supportedElementAttrs,
+      })
+    ).toEqual([
       {
         id: 'path-animate',
         element: 'path',
@@ -47,7 +59,13 @@ describe('getAnimatedElements()', () => {
         <path id="path-animate" d="M0 0 L10 10z"/>
       </svg>`;
 
-    expect(getAnimatedElements(html, 'animate', spec)).toEqual([
+    expect(
+      getAnimatedElements({
+        html,
+        selector: 'animate',
+        supportedElementAttrs,
+      })
+    ).toEqual([
       {
         id: 'path-animate',
         element: 'path',
@@ -64,7 +82,13 @@ describe('getAnimatedElements()', () => {
         <polygon id="polygon-animate" points="M0 0 L10 10z"/>
       </svg>`;
 
-    expect(getAnimatedElements(html, 'animate', spec)).toEqual([
+    expect(
+      getAnimatedElements({
+        html,
+        selector: 'animate',
+        supportedElementAttrs,
+      })
+    ).toEqual([
       {
         id: 'polygon-animate',
         element: 'polygon',

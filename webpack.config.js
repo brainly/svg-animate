@@ -37,6 +37,7 @@ const animationConfig = {
       outputFile: 'animation.svg',
       options: {
         alternateDirection: true,
+        pathPrecision: 0,
       },
     }),
   ]
