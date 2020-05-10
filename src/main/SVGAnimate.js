@@ -5,12 +5,12 @@ import yaml from 'js-yaml';
 import {promisify} from 'util';
 
 import {supportedElementAttrs} from './support';
-import FilesRevision from './FilesRevision';
-import alternateAttributes from './animatedElements/alternateAttributes';
-import cloneAnimatedElement from './animatedElements/cloneAnimatedElement';
-import getAnimatedElements from './animatedElements/getAnimatedElements';
-import mergeAnimatedFrames from './animatedFrames/mergeAnimatedFrames';
-import injectAnimatedFrame from './animatedFrames/injectAnimatedFrame';
+import FilesRevision from './internal/FilesRevision';
+import alternateAttributes from './internal/alternateAttributes';
+import cloneAnimatedElement from './internal/cloneAnimatedElement';
+import getAnimatedElements from './internal/getAnimatedElements';
+import mergeAnimatedFrames from './internal/mergeAnimatedFrames';
+import injectAnimatedFrame from './internal/injectAnimatedFrame';
 import type {
   AnimatedFrame,
   CompilationType,

@@ -1,6 +1,6 @@
 // @flow strict
 
-import type {CompilationType} from './types';
+import type {CompilationType} from '../types';
 
 class FilesRevision {
   startTime: number;

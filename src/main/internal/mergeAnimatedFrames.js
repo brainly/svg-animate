@@ -1,6 +1,6 @@
 // @flow strict
 
-import cloneAnimatedElement from '../animatedElements/cloneAnimatedElement';
+import cloneAnimatedElement from './cloneAnimatedElement';
 import type {AnimatedElement, AnimatedFrame} from '../types';
 
 function mergeAnimatedFrames(frames: Array<AnimatedFrame>) {
