@@ -1,7 +1,7 @@
 # Brainly SVG Animate
 
 <div align="center">
-  <img alt="svg-animate" src="https://user-images.githubusercontent.com/13873576/81423712-2491bd00-9155-11ea-8521-75b888c892a0.png" height="160" />
+  <img alt="svg-animate" src="https://user-images.githubusercontent.com/13873576/81502619-47e87380-92df-11ea-9e4f-6af8315075be.png" width="300" />
 </div>
 
 ## How to use it
