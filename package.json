@@ -8,7 +8,7 @@
   "scripts": {
     "init-config": "bash ./src/scripts/init-config",
     "prebuild": "rm -rf temp",
-    "build": "webpack -p --config webpack.plugin.config.js",
+    "build": "webpack -p --config webpack.config.build.js",
     "start": "yarn build && webpack-dev-server"
   },
   "devDependencies": {
@@ -19,7 +19,9 @@
     "@babel/preset-flow": "^7.9.0",
     "abs-svg-path": "^0.1.1",
     "babel-loader": "^8.1.0",
+    "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
+    "css-loader": "^3.5.3",
     "flow-bin": "^0.124.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.0.1",
@@ -28,6 +30,7 @@
     "normalize-svg-path": "^1.0.1",
     "parse-svg-path": "^0.1.2",
     "serialize-svg-path": "^0.1.0",
+    "style-loader": "^1.2.1",
     "svg-inline-loader": "^0.8.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",

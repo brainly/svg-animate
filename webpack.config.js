@@ -1,10 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SVGAnimate = require('./temp/SVGAnimate');
 
+const setupServer = require('./temp/server');
+const SVGAnimate = require('./temp/SVGAnimate');
 const outputPath = path.join(__dirname, 'temp');
 
 const devServer = {
+  before: setupServer,
   contentBase: outputPath,
   open: true,
 };
@@ -52,6 +54,19 @@ const clientConfig = {
     filename: 'client.js'
   },
   devServer,
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loaders: ['babel-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ]
+  },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',

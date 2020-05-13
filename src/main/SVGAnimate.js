@@ -20,7 +20,7 @@ import type {
 
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
-const loadYamlFile = path =>  yaml.load(fs.readFileSync(path, 'utf8'));
+const loadYamlFile = path => yaml.load(fs.readFileSync(path, 'utf8'));
 
 const isFrameFile = file => file.endsWith('.svg');
 const isConfigFile = file => file.endsWith('config.yml');
@@ -79,6 +79,7 @@ class SVGAnimate {
               supportedElementAttrs,
               options: this.options,
             });
+
             this.animatedFrames.set(changedFramesPath[index], elements);
           });
 
