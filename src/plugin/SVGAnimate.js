@@ -56,7 +56,8 @@ class SVGAnimate {
     this.revision = new FilesRevision();
   }
 
-  apply(compiler: any) {
+  // $FlowFixMe
+  apply(compiler) {
     compiler.hooks.afterEmit.tap('SVGAnimate', (compilation: CompilationType) => {
       const dependency = Array.from(compilation.fileDependencies);
       const changedFiles = this.revision.getChangedFiles(compilation);

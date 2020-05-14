@@ -8,25 +8,30 @@ export type CompilationType = {
 
 export type SupportedElementAttrs = {
   [elementName: string]: Array<string>,
+  ...
 };
 
 export type AnimatedElement = {
   id: string,
   element: string,
-  attrs: {[attr: string]: Array<string>},
+  attrs: {
+    [attr: string]: Array<string>,
+    ...
+  },
 };
 
 export type AnimatedFrame = Array<AnimatedElement>;
 
-export type OptionsType = $ReadOnly<{
+export type OptionsType = {
   alternateDirection: boolean,
   pathPrecision?: number,
-}>;
+};
 
-export type ConfigType = $ReadOnly<{
+export type ConfigType = {
   [elementName: string]: {
     duration?: string,
     delay?: string,
     easing?: string
-  }
-}>;
+  },
+  ...
+};
