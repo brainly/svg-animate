@@ -1,3 +1,12 @@
+$fontSize: 14px;
+
+$neutralWhite: #fff;
+$darkGray: #323c45;
+$backgroundGray: #ebf2f7;
+$placeholderGray: #acb9c2;
+$wireframeGray: #d1d9de;
+$highlightedBlue: #b9e2fe;
+
 html,
 body {
   width: 100%;
@@ -5,9 +14,9 @@ body {
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  color: #323c45;
+  font-family: 'Roboto', sans-serif;
+  font-size: $fontSize;
+  color: $darkGray;
   margin: 0;
   padding: 0;
 }
@@ -18,7 +27,22 @@ img {
   height: 60%;
 }
 
+input {
+  width: 100%;
+  padding: 8px 12px;
+  outline: 0;
+  border: 0;
+  border-radius: 100px;
+  background-color: $backgroundGray;
+  font-size: $fontSize;
+
+  &::placeholder {
+    color: $placeholderGray;
+  }
+}
+
 .container {
+  position: relative;
   display: flex;
   align-items: stretch;
 }
@@ -33,9 +57,9 @@ main {
 }
 
 aside {
-  background-color: #edf8ff;
   display: flex;
   flex-direction: column;
+  border-left: 1px solid $wireframeGray;
   width: 25vw;
   min-width: 300px;
   overflow: scroll;
@@ -44,7 +68,7 @@ aside {
 footer {
   position: absolute;
   text-align: center;
-  color: #687b8c;
+  color: $darkGray;
   margin: 0 16px 16px;
   left: 0;
   right: 0;
@@ -52,18 +76,27 @@ footer {
 }
 
 .panel {
-  border-bottom: 2px solid #b9e2fe;
+  border-bottom: 2px solid $wireframeGray;
 }
 
 .panel-list {
   overflow: scroll;
+  list-style: none;
+  background-color: $backgroundGray;
+  user-select: none;
+  padding: 0;
+  margin: 0;
 
   &__item {
     padding: 8px 16px;
     cursor: pointer;
   
     &:hover {
-      background-color: #b9e2fe;
+      text-decoration: underline;
+    }
+
+    &--active {
+      background-color: $highlightedBlue;
     }
   }
 }
@@ -74,17 +107,5 @@ footer {
   &__field {
     padding: 0 16px;
     margin: 8px 0;
-  }
-
-  & input {
-    width: 100%;
-    padding: 8px;
-    outline: 0;
-    border: 0;
-    background-color: #fff;
-
-    &::placeholder {
-      color: #687b8c;
-    }
   }
 }

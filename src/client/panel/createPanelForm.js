@@ -6,48 +6,39 @@ type FieldType = {
   placeholder?: string, 
 };
 
-type SetValueType = (name: string, value: string) => mixed;
-
 type PropsType = {
   fields: Array<FieldType>,
-  setup: (setValue: SetValueType) => mixed,
   onChange: (field: FieldType) => mixed,
 };
 
-export function createPanelForm({fields, setup}: PropsType) {
-  const entries = new Map();
+export function createPanelForm({fields}: PropsType) {
+  const refs = new Map<string, HTMLElement>();
   const panel = document.createElement('div');
   panel.className = 'panel panel-form';
 
-  fields.forEach(field => {
-    const elem = document.createElement('div');
+  fields.forEach(fieldData => {
+    const field = document.createElement('div');
     const input = document.createElement('input');
+    refs.set(fieldData.name, input);
 
-    elem.className = 'panel-form__field';
-    elem.appendChild(input);
-    input.placeholder = field.placeholder || '';
-    input.addEventListener('change', getChangeHandler(field));
-    panel.appendChild(elem);
-    entries.set(field.name, input);
+    field.className = 'panel-form__field';
+    input.placeholder = fieldData.placeholder || '';
+    input.addEventListener('change', getChangeHandler(fieldData));
+
+    field.appendChild(input);
+    panel.appendChild(field);
   });
 
-  function getChangeHandler(field) {
-    return () => {
-      console.log({field});
-    }
+  function getChangeHandler(data: FieldType) {
+    return () => console.log({data});
   }
 
-  function setValue(name, value) {
+  function setValue(name: string, value: string | number) {
     console.log(name, value);
   }
 
-  setup(setValue);
-  return panel;
+  return {
+    panel,
+    setValue,
+  };
 }
-
-
-// (event: Event) => {
-//       const target: HTMLInputElement = (event.target: any);
-//       state[name] = target.value;
-//       postConfig(state);
-//     }

@@ -28,25 +28,21 @@ async function initialize() {
   if (!docker) return;
 
   const ids = await getAnimatedElementIds();
+  // todo: show error when repeated ids
+  // todo: show error when style html element is present
 
-  docker.appendChild(
-    createPanelForm({
-      fields: configFields,
-      onChange: () => null,
-      setup: setValue => {
-        console.log(setValue)
-      }
-    })
-  );
+  const options = createPanelForm({
+    fields: configFields,
+    onChange: () => null,
+  });
 
-  docker.appendChild(
-    createPanelList({
-      items: ids.map(id => ({name: id})),
-      onSelect: () => null,
-    })
-  );
+  const elements = createPanelList({
+    items: ids.map(id => ({name: id})),
+  });
 
-  console.log(ids);
+  docker.appendChild(options.panel);
+  docker.appendChild(elements.panel);
+
   // const config = await getConfig();
   // const defaultConfig = config['default'];
   // createRecord('my-element', root);

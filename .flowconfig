@@ -16,6 +16,7 @@ module.file_ext=.css
 module.file_ext=.scss
 
 exact_by_default=true
+esproposal.optional_chaining=enable
 
 [strict]
 unclear-type
