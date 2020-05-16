@@ -54,10 +54,13 @@ const clientConfig = {
     filename: 'client.js'
   },
   devServer,
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['babel-loader'],
       },

@@ -6,6 +6,8 @@ $backgroundGray: #ebf2f7;
 $placeholderGray: #acb9c2;
 $wireframeGray: #d1d9de;
 $highlightedBlue: #b9e2fe;
+$inputYellow: #ffdc8e;
+$inputInvalid: #ff8173;
 
 html,
 body {
@@ -29,12 +31,17 @@ img {
 
 input {
   width: 100%;
+  height: 32px;
   padding: 8px 12px;
   outline: 0;
   border: 0;
-  border-radius: 100px;
+  border-radius: 16px;
   background-color: $backgroundGray;
   font-size: $fontSize;
+
+  &:focus {
+    box-shadow: inset 0 0 0 2px $inputYellow;
+  }
 
   &::placeholder {
     color: $placeholderGray;
@@ -80,6 +87,7 @@ footer {
 }
 
 .panel-list {
+  position: relative;
   overflow: scroll;
   list-style: none;
   background-color: $backgroundGray;
@@ -90,13 +98,16 @@ footer {
   &__item {
     padding: 8px 16px;
     cursor: pointer;
-  
+
     &:hover {
       text-decoration: underline;
     }
 
     &--active {
       background-color: $highlightedBlue;
+      position: sticky;
+      top: 0;
+      bottom: 0;
     }
   }
 }
@@ -107,5 +118,32 @@ footer {
   &__field {
     padding: 0 16px;
     margin: 8px 0;
+
+    &--invalid {
+      & input:focus {
+        box-shadow: inset 0 0 0 2px $inputInvalid;
+      }
+
+      & .panel-form__text {
+        background-color: $inputInvalid;
+      }
+    }
+  }
+
+  &__label {
+    display: flex;
+  }
+
+  &__text {
+    background-color: $inputYellow;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    padding: 8px 12px;
+    min-width: 50px;
+  }
+
+  & input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
