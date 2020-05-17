@@ -17,12 +17,10 @@ const pluginConfig = {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: ['babel-loader'],
-      }
-    ]
+      },
+    ],
   },
-  externals: [
-    nodeExternals(),
-  ]
+  externals: [nodeExternals()],
 };
 
 const serverConfig = {
@@ -40,12 +38,10 @@ const serverConfig = {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: ['babel-loader'],
-      }
-    ]
+      },
+    ],
   },
-  externals: [
-    nodeExternals(),
-  ]
+  externals: [nodeExternals()],
 };
 
 module.exports = [pluginConfig, serverConfig];

@@ -7,7 +7,8 @@ type MultiCompilerType = {
 };
 
 type CompilerType = {
-  _lastCompilationFileDependencies: Array<string>,
+  _lastCompilationFileDependencies: Set<string>,
+  _lastCompilationContextDependencies: Set<string>,
   options: {
     devServer: {
       filename: string,
@@ -17,14 +18,18 @@ type CompilerType = {
   },
 };
 
-export function getFramesCompiler(compiler: MultiCompilerType): CompilerType | null {
+export function getFramesCompiler(
+  compiler: MultiCompilerType,
+): CompilerType | null {
   const framesCompiler = compiler.compilers.find(comp => {
-    return comp.options.devServer.filename === framesEntryPoint
+    return comp.options.devServer.filename === framesEntryPoint;
   });
   return framesCompiler || null;
 }
 
-export function getLastCompilationFiles(compiler: MultiCompilerType): Array<string> {
+export function getLastCompilationFiles(
+  compiler: MultiCompilerType,
+): Array<string> {
   const framesCompiler = getFramesCompiler(compiler);
 
   if (framesCompiler) {

@@ -3,22 +3,25 @@
 import fs from 'fs';
 import bodyParser from 'body-parser';
 import yaml from 'js-yaml';
+import path from 'path';
 
 import {animatedElementSelector} from './consts';
 import {getLastCompilationFiles} from './compiler';
 import {getAnimatedElementIds} from './frame';
 
 // $FlowFixMe
-module.exports = function(app, server, compiler) {
+module.exports = function (app, server, compiler) {
+  const configPath = 'frames/config.json';
+
   app.use(bodyParser.json());
 
   app.post('/api/config', (req, res, next) => {
-    console.log(req.body);
+    fs.writeFileSync(configPath, JSON.stringify(req.body, null, '  '));
   });
 
   app.get('/api/config', (req, res, next) => {
     const files = getLastCompilationFiles(compiler);
-    const path = files.find(file => file.endsWith('config.yml'));
+    const path = files.find(file => file.endsWith('config.json'));
     res.send(loadYamlFile(path));
   });
 
@@ -29,7 +32,7 @@ module.exports = function(app, server, compiler) {
     const data = fs.readFileSync(firstFramePath, 'utf8');
     res.send(getAnimatedElementIds(data, animatedElementSelector));
   });
-}
+};
 
 function loadYamlFile(path) {
   // $FlowFixMe

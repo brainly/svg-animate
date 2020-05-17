@@ -17,20 +17,20 @@ const animationConfig = {
   entry: './src/frames.js',
   output: {
     path: outputPath,
-    filename: 'frames.js'
+    filename: 'frames.js',
   },
   devServer,
   module: {
     rules: [
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
+        loader: 'svg-inline-loader',
       },
       {
         test: /\.ya?ml$/,
         loader: 'js-yaml-loader',
-      }
-    ]
+      },
+    ],
   },
   plugins: [
     new SVGAnimate({
@@ -42,7 +42,7 @@ const animationConfig = {
         pathPrecision: 0,
       },
     }),
-  ]
+  ],
 };
 
 const clientConfig = {
@@ -51,7 +51,7 @@ const clientConfig = {
   entry: './src/client/index.js',
   output: {
     path: outputPath,
-    filename: 'client.js'
+    filename: 'client.js',
   },
   devServer,
   resolve: {
@@ -66,21 +66,17 @@ const clientConfig = {
       },
       {
         test: /\.s[ac]ss$/i,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-        ],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-    ]
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/client/index.html',
-      animationPath: 'animation.svg'
+      animationPath: 'animation.svg',
     }),
-  ]
+  ],
 };
 
 module.exports = [animationConfig, clientConfig];

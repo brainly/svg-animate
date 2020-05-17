@@ -1,14 +1,16 @@
 // @flow strict
 
-export function postConfig(data: {}) {
+import {type ConfigType} from './config/reducer';
+
+export function postConfig(config: ConfigType) {
   return fetch('/api/config', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(config),
   });
 }
 
-export function getConfig(): Promise<{}> {
+export function getConfig(): Promise<ConfigType> {
   return fetch('/api/config').then(res => res.json());
 }
 

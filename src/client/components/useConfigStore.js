@@ -1,6 +1,7 @@
 // @flow strict
 
 import {useReducer, useEffect} from 'react';
+import {postConfig} from '../api';
 import {debounce} from '../helpers/debounce';
 import {configReducer, type ConfigType} from '../config/reducer';
 import {type ActionType} from '../config/actions';
@@ -24,7 +25,7 @@ export function useConfigStore() {
 
   useEffect(() => {
     if (isValid(config)) {
-      console.log('post config');
+      postConfig(config);
     }
   }, [config]);
 
