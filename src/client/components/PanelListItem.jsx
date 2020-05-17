@@ -6,6 +6,7 @@ import cx from 'classnames';
 export type ItemType = {
   name: string,
   params: boolean,
+  invalid: boolean,
 };
 
 type PropsType = {
@@ -14,10 +15,17 @@ type PropsType = {
   onClick: (event: SyntheticMouseEvent<HTMLElement>) => mixed,
 };
 
-export function PanelListItem({name, params, active, onClick}: PropsType) {
+export function PanelListItem({
+  name,
+  params,
+  invalid,
+  active,
+  onClick,
+}: PropsType) {
   const className = cx('panel-list__item', {
     'panel-list__item--active': active,
     'panel-list__item--params': params,
+    'panel-list__item--invalid': invalid,
   });
 
   return (

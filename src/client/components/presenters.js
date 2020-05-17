@@ -1,14 +1,17 @@
 // @flow strict
 
-import {type ConfigType} from '../config/reducer';
+import {
+  getDefaultsKeys,
+  type ConfigType,
+  type ParamsKeyType,
+} from '../config/reducer';
 import {type ItemType} from './PanelListItem';
-import {type FieldType} from './PanelFormField';
+import {isInvalid, type FieldType} from './PanelFormField';
 
 const timePattern = /^\d+(s|ms)$/;
-const fieldsPatterns = {
+const fieldsPatterns: {[name: ParamsKeyType]: RegExp, ...} = {
   duration: timePattern,
   delay: timePattern,
-  easing: undefined,
 };
 
 export function formatFormFields(
@@ -16,17 +19,18 @@ export function formatFormFields(
   selection: Array<ItemType>,
 ): Array<FieldType> {
   if (!selection.length) {
-    return Object.keys(config.defaults).map(name => ({
+    return getDefaultsKeys(config).map(name => ({
       name,
       value: '',
-      placeholder: config.defaults[name] ?? '',
+      placeholder: config.defaults[name] || '',
       invalid: false,
       disabled: true,
+      pattern: null,
     }));
   }
 
   const uniqueParams = getUniqueParams(config, selection);
-  return Object.keys(config.defaults).map(name => {
+  return getDefaultsKeys(config).map(name => {
     const paramValue = uniqueParams[name];
     const value = paramValue ?? '';
 
@@ -36,6 +40,7 @@ export function formatFormFields(
       placeholder: (paramValue !== null && config.defaults[name]) || 'n/a',
       invalid: isInvalid(value, fieldsPatterns[name]),
       disabled: paramValue === null,
+      pattern: fieldsPatterns[name],
     };
   });
 }
@@ -47,11 +52,8 @@ export function formatListItems(
   return ids.map(name => ({
     name,
     params: !!config.elements[name],
+    invalid: !!config.elements[name]?.__invalid,
   }));
-}
-
-function isInvalid(value: string, pattern: ?RegExp) {
-  return value && pattern ? !pattern.test(value) : false;
 }
 
 export function getUniqueParams(

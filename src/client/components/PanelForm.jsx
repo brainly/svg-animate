@@ -1,11 +1,15 @@
 // @flow strict
 
 import React, {type Node} from 'react';
-import {PanelFormField, type FieldType} from './PanelFormField';
+import {
+  PanelFormField,
+  type PropsType as PanelFormFieldPropsType,
+  type FieldType,
+} from './PanelFormField';
 
 type PropsType = {
   fields: Array<FieldType>,
-  onChange: (name: string, value: string) => mixed,
+  onChange: $PropertyType<PanelFormFieldPropsType, 'onChange'>,
 };
 
 export function PanelForm({fields, onChange}: PropsType) {

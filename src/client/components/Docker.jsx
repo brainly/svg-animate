@@ -1,10 +1,8 @@
 // @flow strict
 
 import React, {useState, useEffect} from 'react';
-import {debounce} from '../helpers/debounce';
-import {setElementParam} from '../config/actions';
-import {type ConfigType} from '../config/reducer';
 
+import {setElementParam, setElementInvalid} from '../config/actions';
 import {formatFormFields, formatListItems} from './presenters';
 import {useAnimatedElements} from './useAnimatedElements';
 import {useConfigStore} from './useConfigStore';
@@ -23,13 +21,19 @@ export function Docker() {
   const {selection, select} = useSelection<ItemType>(identityItem);
   const {config, dispatch} = useConfigStore();
 
-  function handleFieldChange(paramName, paramValue) {
+  function handleFieldChange(paramName, paramValue, invalid) {
     selection.forEach(item => {
       dispatch(
         setElementParam({
           name: item.name,
           paramName,
           paramValue,
+        }),
+      );
+      dispatch(
+        setElementInvalid({
+          name: item.name,
+          invalid,
         }),
       );
     });

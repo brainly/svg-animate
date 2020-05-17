@@ -7,6 +7,7 @@ $placeholderGray: #acb9c2;
 $wireframeGray: #d1d9de;
 $highlightedBlue: #b9e2fe;
 $activeBlue: #1d9ff5;
+$activeRed: #ff604b;
 $inputYellow: #ffdc8e;
 $inputInvalid: #ff8173;
 
@@ -126,6 +127,14 @@ footer {
       & .panel-list__bullet {
         background-color: $activeBlue;
         animation: popIn 250ms ease-in-out forwards;
+      }
+    }
+
+    &--invalid {
+      color: $activeRed;
+
+      & .panel-list__bullet {
+        background-color: $activeRed;
       }
     }
   }

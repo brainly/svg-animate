@@ -9,11 +9,12 @@ export type FieldType = {
   placeholder: string,
   disabled: boolean,
   invalid: boolean,
+  pattern: ?RegExp,
 };
 
-type PropsType = {
+export type PropsType = {
   ...FieldType,
-  onChange: (name: string, value: string) => mixed,
+  onChange: (name: string, value: string, invalid: boolean) => mixed,
 };
 
 export function PanelFormField({
@@ -22,6 +23,7 @@ export function PanelFormField({
   placeholder,
   disabled,
   invalid,
+  pattern,
   onChange,
 }: PropsType) {
   const fieldName = cx('panel-form__field', {
@@ -30,7 +32,8 @@ export function PanelFormField({
   });
 
   function handleChange(event: SyntheticInputEvent<HTMLInputElement>) {
-    onChange(name, event.target.value);
+    const value = event.target.value;
+    onChange(name, value, isInvalid(value, pattern));
   }
 
   return (
@@ -47,4 +50,8 @@ export function PanelFormField({
       </label>
     </div>
   );
+}
+
+export function isInvalid(value: string, pattern: ?RegExp) {
+  return value && pattern ? !pattern.test(value) : false;
 }
