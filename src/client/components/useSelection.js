@@ -1,41 +1,41 @@
 // @flow strict
 
 import React, {useState} from 'react';
+import {not} from '../helpers/not';
+
+type IdentityType<T> = (elem: T) => (elem: T) => boolean;
 
 type OutputType<T> = {
-  selection: Set<T>,
+  selection: Array<T>,
   select: (elem: T, shiftKey: boolean) => mixed,
-  isSelected: (elem: T) => boolean,
 };
 
-export function useSelection<T>(): OutputType<T> {
-  const [selection, setSelection] = useState<Set<T>>(new Set());
+const instanceIdentity = a => b => a === b;
+
+export function useSelection<T>(identity?: IdentityType<T>): OutputType<T> {
+  const [selection, setSelection] = useState<Array<T>>([]);
+  const identityFn = identity ?? instanceIdentity;
 
   function select(elem: T, shiftKey: boolean) {
-    const nextSelection = new Set(shiftKey ? selection : []);
+    let nextSelection = shiftKey ? [...selection] : [];
 
-    if (selection.has(elem)) {
-      nextSelection.delete(elem);
+    if (selection.find(identityFn(elem))) {
+      nextSelection = nextSelection.filter(not(identityFn(elem)));
 
       // leave currently selected element
       // when deselecting multiple elements
-      if (!shiftKey && selection.size > 1) {
-        nextSelection.add(elem);
+      if (!shiftKey && selection.length > 1) {
+        nextSelection.push(elem);
       }
     } else {
-      nextSelection.add(elem);
+      nextSelection.push(elem);
     }
 
     setSelection(nextSelection);
   }
 
-  function isSelected(elem: T): boolean {
-    return selection.has(elem);
-  }
-
   return {
     selection,
     select,
-    isSelected,
   };
 }

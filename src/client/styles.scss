@@ -6,8 +6,18 @@ $backgroundGray: #ebf2f7;
 $placeholderGray: #acb9c2;
 $wireframeGray: #d1d9de;
 $highlightedBlue: #b9e2fe;
+$activeBlue: #1d9ff5;
 $inputYellow: #ffdc8e;
 $inputInvalid: #ff8173;
+
+@keyframes popIn {
+  from {
+    transform: scale3d(1.4, 1.4, 1);
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
 
 html,
 body {
@@ -109,6 +119,25 @@ footer {
       top: 0;
       bottom: 0;
     }
+
+    &--params {
+      color: $activeBlue;
+
+      & .panel-list__bullet {
+        background-color: $activeBlue;
+        animation: popIn 250ms ease-in-out forwards;
+      }
+    }
+  }
+
+  &__bullet {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-left: 8px;
+    background-color: $wireframeGray;
+    border-radius: 100%;
+    vertical-align: middle;
   }
 }
 
@@ -126,6 +155,12 @@ footer {
 
       & .panel-form__text {
         background-color: $inputInvalid;
+      }
+    }
+
+    &--disabled {
+      & .panel-form__text {
+        background-color: $wireframeGray;
       }
     }
   }

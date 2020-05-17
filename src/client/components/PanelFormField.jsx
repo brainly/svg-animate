@@ -5,28 +5,33 @@ import cx from 'classnames';
 
 export type FieldType = {
   name: string,
-  placeholder?: string,
-  pattern?: RegExp,
+  value: string,
+  placeholder: string,
+  disabled: boolean,
+  invalid: boolean,
 };
 
 type PropsType = {
   ...FieldType,
-  value: string,
-  invalid?: boolean,
-  onChange: (event: SyntheticInputEvent<HTMLInputElement>) => mixed,
+  onChange: (name: string, value: string) => mixed,
 };
 
 export function PanelFormField({
   name,
   value,
   placeholder,
-  pattern,
+  disabled,
   invalid,
   onChange,
 }: PropsType) {
   const fieldName = cx('panel-form__field', {
     'panel-form__field--invalid': invalid,
+    'panel-form__field--disabled': disabled,
   });
+
+  function handleChange(event: SyntheticInputEvent<HTMLInputElement>) {
+    onChange(name, event.target.value);
+  }
 
   return (
     <div className={fieldName}>
@@ -36,8 +41,8 @@ export function PanelFormField({
           type="text"
           value={value}
           placeholder={placeholder}
-          pattern={pattern}
-          onChange={onChange}
+          disabled={disabled}
+          onChange={handleChange}
         />
       </label>
     </div>
