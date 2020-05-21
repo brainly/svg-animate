@@ -1,2 +1,2 @@
 // https://webpack.js.org/guides/dependency-management/#requirecontext
-require.context('../frames', false, /(\.svg|config.yml)$/);
+require.context('../frames', false, /(\.svg|config.json)$/);

@@ -1,10 +1,11 @@
 // @flow strict
 
-import {useReducer, useEffect} from 'react';
-import {postConfig} from '../api';
+import {useReducer, useEffect, useRef} from 'react';
 import {debounce} from '../helpers/debounce';
+
+import {postConfig, getConfig} from '../api';
 import {configReducer, type ConfigType} from '../config/reducer';
-import {type ActionType} from '../config/actions';
+import {setConfig, type ActionType} from '../config/actions';
 
 // todo: pass defaults in parameter
 const initialConfig: ConfigType = {
@@ -18,15 +19,27 @@ const initialConfig: ConfigType = {
 };
 
 export function useConfigStore() {
+  const fetching = useRef<boolean>(false);
   const [config, dispatch] = useReducer<ConfigType, ActionType>(
     configReducer,
     initialConfig,
   );
 
   useEffect(() => {
-    if (isValid(config)) {
+    const fetch = async function () {
+      fetching.current = true;
+      const config = await getConfig();
+      setConfig({config});
+    };
+
+    fetch();
+  }, []);
+
+  useEffect(() => {
+    if (!fetching.current && isValid(config)) {
       postConfig(config);
     }
+    fetching.current = false;
   }, [config]);
 
   return {

@@ -20,9 +20,7 @@ module.exports = function (app, server, compiler) {
   });
 
   app.get('/api/config', (req, res, next) => {
-    const files = getLastCompilationFiles(compiler);
-    const path = files.find(file => file.endsWith('config.json'));
-    res.send(loadYamlFile(path));
+    res.send(fs.readFileSync(configPath, 'utf8'));
   });
 
   app.get('/api/animated_element_ids', (req, res, next) => {

@@ -1,1 +1,1 @@
-module.exports = require('./plugin/SVGAnimate').default;
+module.exports = require('./plugin').SVGAnimate;

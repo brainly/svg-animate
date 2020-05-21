@@ -24,6 +24,10 @@ export type ConfigType = {
 
 export function configReducer(config: ConfigType, action: ActionType) {
   switch (action.type) {
+    case 'setConfig': {
+      return action.payload.config;
+    }
+
     case 'setElementParam': {
       const {name, paramName, paramValue} = action.payload;
       const prevElement = config.elements[name] || {};

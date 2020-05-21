@@ -15,17 +15,16 @@ import type {
   AnimatedFrame,
   CompilationType,
   ConfigType,
-  OptionsType
+  OptionsType,
 } from './types';
 
 const readFileAsync = promisify(fs.readFile);
 const readFileUtf8 = file => readFileAsync(file, 'utf8');
-const loadYamlFile = path => yaml.load(fs.readFileSync(path, 'utf8'));
 
 const isFrameFile = file => file.endsWith('.svg');
-const isConfigFile = file => file.endsWith('config.yml');
+const isConfigFile = file => file.endsWith('config.json');
 
-class SVGAnimate {
+export class SVGAnimate {
   selector: string;
   outputPath: string;
   outputFile: string;
@@ -39,12 +38,12 @@ class SVGAnimate {
     selector = 'animate',
     outputPath = '',
     outputFile = '',
-    options
+    options,
   }: {
-    selector: string;
-    outputPath: string;
-    outputFile: string;
-    options: OptionsType;
+    selector: string,
+    outputPath: string,
+    outputFile: string,
+    options: OptionsType,
   }) {
     this.selector = selector;
     this.outputPath = outputPath;
@@ -58,49 +57,52 @@ class SVGAnimate {
 
   // $FlowFixMe
   apply(compiler) {
-    compiler.hooks.afterEmit.tap('SVGAnimate', (compilation: CompilationType) => {
-      const dependency = Array.from(compilation.fileDependencies);
-      const changedFiles = this.revision.getChangedFiles(compilation);
-      const configPath = changedFiles.find(isConfigFile);
+    compiler.hooks.afterEmit.tap(
+      'SVGAnimate',
+      (compilation: CompilationType) => {
+        const dependency = Array.from(compilation.fileDependencies);
+        const changedFiles = this.revision.getChangedFiles(compilation);
+        const configPath = changedFiles.find(isConfigFile);
 
-      if (configPath) {
-        this.config = loadYamlFile(configPath);
-      }
+        if (configPath) {
+          this.config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        }
 
-      this.validateExistingFrames(dependency);
-      const changedFramesPath = changedFiles.filter(isFrameFile);
-      const baseFramePath = dependency.find(isFrameFile);
+        this.validateExistingFrames(dependency);
+        const changedFramesPath = changedFiles.filter(isFrameFile);
+        const baseFramePath = dependency.find(isFrameFile);
 
-      Promise.all(changedFramesPath.map(readFileUtf8))
-        .then(changedFramesData => {
-          changedFramesData.forEach((data, index) => {
-            const elements = getAnimatedElements({
-              html: data,
-              selector: this.selector,
-              supportedElementAttrs,
-              options: this.options,
+        Promise.all(changedFramesPath.map(readFileUtf8))
+          .then(changedFramesData => {
+            changedFramesData.forEach((data, index) => {
+              const elements = getAnimatedElements({
+                html: data,
+                selector: this.selector,
+                supportedElementAttrs,
+                options: this.options,
+              });
+
+              this.animatedFrames.set(changedFramesPath[index], elements);
             });
 
-            this.animatedFrames.set(changedFramesPath[index], elements);
+            if (!this.animatedFrames.size) {
+              console.log('😥 There are no frames to animate.');
+              return;
+            }
+            if (changedFramesPath[0] === baseFramePath) {
+              this.createAnimation(changedFramesData[0], dependency);
+            } else {
+              readFileUtf8(baseFramePath).then(frameData => {
+                this.createAnimation(frameData, dependency);
+              });
+            }
+          })
+          .catch(error => {
+            // node requires to catch explicitly
+            throw error;
           });
-
-          if (!this.animatedFrames.size) {
-            console.log('😥 There are no frames to animate.');
-            return;
-          }
-          if (changedFramesPath[0] === baseFramePath) {
-            this.createAnimation(changedFramesData[0], dependency);
-          } else {
-            readFileUtf8(baseFramePath).then(frameData => {
-              this.createAnimation(frameData, dependency);
-            });
-          }
-        })
-        .catch(error => {
-          // node requires to catch explicitly
-          throw error;
-        });
-    });
+      },
+    );
   }
 
   createAnimation(data: string, dependency: Array<string>) {
@@ -142,5 +144,3 @@ class SVGAnimate {
     return result;
   }
 }
-
-export default SVGAnimate;

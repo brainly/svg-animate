@@ -1,6 +1,14 @@
 // @flow strict
 
+import {type ConfigType} from './reducer';
+
 export type ActionType =
+  | {
+      type: 'setConfig',
+      payload: {
+        config: ConfigType,
+      },
+    }
   | {
       type: 'setElementParam',
       payload: {
@@ -16,6 +24,14 @@ export type ActionType =
         invalid: boolean,
       },
     };
+
+// prettier-ignore
+export const setConfig = (payload: {
+  config: ConfigType,
+}): ActionType => ({
+  type: 'setConfig',
+  payload,
+});
 
 export const setElementParam = (payload: {
   name: string,
